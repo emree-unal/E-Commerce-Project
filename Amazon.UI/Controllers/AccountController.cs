@@ -27,6 +27,7 @@ namespace Amazon.UI.Controllers
        
         public IActionResult Login(string returnUrl)
         {
+            //Deneme
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
