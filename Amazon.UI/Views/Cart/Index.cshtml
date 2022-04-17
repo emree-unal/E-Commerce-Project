@@ -1,0 +1,63 @@
+﻿@model Cart
+@{
+    Layout = "_Layout";
+}
+
+<table class="table table-hover table-striped ">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Fiyat</th>
+            <th>Adet</th>
+            <th>Ara Toplam</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var productInCart in Model.Products)
+        {
+            <tr>
+                <td>@productInCart.Product.ProductName</td>
+                <td>@productInCart.Product.Price</td>
+                <td>@productInCart.Quantity</td>
+                <td>@(productInCart.Product.Price * productInCart.Quantity)₺</td>
+                <td><button class="btn btn-danger sil" data-id="@productInCart.Product.ProductId">Sil</button></td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3">Toplam Tutar:</td>
+            <td>@Model.GetTotalValue() ₺</td>
+            <td></td>
+        </tr>
+
+    </tfoot>
+</table>
+
+@section Scripts
+{
+    <script>
+            $(document).ready(function () {
+            $(".sil").click(function () {
+                var id = $(this).data("id");
+                console.log(id);
+                $.ajax({
+                    url: "/Cart/RemoveCart/",
+                    data: { id },
+                    method: "GET",
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data == "OK") {
+                            alertify.alert("Ürün Sepettenden kaldırıldı.", () => location = location)
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+
+        });
+    </script>
+}

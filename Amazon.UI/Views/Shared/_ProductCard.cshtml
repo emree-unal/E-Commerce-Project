@@ -1,0 +1,18 @@
+﻿@model Amazon.Entities.Concrete.Product
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+<div class="col-3">
+    <div class="card ">
+        <div class="card-body">
+            <img class="card-img-top" height="150" src="@Model.ImageUrl" alt="Card image">
+            <p class="card-title"><strong>@Model.ProductName </strong> </p>
+            <p class="card-text">@Model.Description</p>
+            <p class="text-danger">@Model.Price ₺</p>
+            <button class="btn btn-success sepet" data-id="@Model.ProductId" data-name="@Model.ProductName"> Sepete Ekle   </button>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,222 @@
+﻿@model List<Category>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+
+
+        <div class="col-md-12 col-md-offset-1">
+
+            <div class="panel panel-default panel-table">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col col-xs-6">
+                            <h3 class="panel-title">Categories List</h3>
+                        </div>
+                        <div class="col col-xs-6 text-right">
+                            <button type="button" class="btn btn-sm btn-primary btn-create" id="newCategory">Add New Product</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-list">
+                        <thead>
+                            <tr>
+
+                                <th class="hidden-xs">ID</th>
+                                <th>CategoryName</th>
+                                <th>Description</th>
+                                <th style="text-align:center"><em class="fa fa-cog"></em></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var category in Model)
+                            {
+                                <tr>
+
+                                    <td class="hidden-xs">@category.CategoryId</td>
+                                    <td>@category.CategoryName</td>
+                                    <td>@category.Description</td>
+
+                                    <td align="center">
+                                        <a class="btn btn-primary updatebutton" data-id="@category.CategoryId"><em class="fa fa-pen"></em></a>
+                                        <a class="btn btn-danger deletebutton" data-id="@category.CategoryId"><em class="fa fa-trash"></em></a>
+                                        <a class="btn btn-info"><em class="fa fa-info-circle"></em></a>
+                                    </td>
+                                </tr>
+                            }
+
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="row justify-content-center">
+                    <ul class="pagination ">
+                        @for (int i = 1; i <= @ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item"><a asp-action="Index" class="page-link" asp-route-page="@i">@i</a></li>
+
+
+                        }
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="staticBackdropLabel">Ürün Ekleme Ekranı</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="butonSave">Save</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop2" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="staticBackdropLabel">Ürün Ekleme Ekranı</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody2">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="buttonSave2">Save2</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+
+
+        $(document).ready(function () {
+            $("#newCategory").click(function () {
+                $.get("/Category/Create", function (data) {
+                    $("#modalBody").html(data);
+                })
+                $("#staticBackdrop").modal("show");
+            });
+            $("#butonSave").click(function () {
+                let bilgiler = {
+                    CategoryName: $("#CategoryName").val(),
+                    Description: $("#Description").val()
+                };
+                $.ajax({
+                    url: "/Category/Create",
+                    method: "POST",
+                    data: bilgiler,
+                    dataType: "json",
+                    success: function (data) {
+                        $("#staticBackdrop").modal("hide");
+                        alertify.alert("", function () {
+                            location = location
+                        }).setHeader('<center><span>Ekleme İşlemi Başarılı</span></center>').setContent('<center><img height="150" width="150"  src="https://img.paperform.co/fetch/w_400,f_auto/https://s3.amazonaws.com/pf-upload-01/u-18328/1/2019-11-09/zz13tw2/check.gif" alt="done" /></center>');
+                    },
+                    error: function (data) {
+                        $("#staticBackdrop2").modal("hide");
+                        alertify.alert("", function () {
+                            location = location;
+
+                        }).setHeader('<center><span>Ekleme İşlemi Başarısız</span></center>').setContent('<center><img height="150" width="150"  src="https://fcs3pub.s3.amazonaws.com/photo-book/images/payment/alert.gif" alt="error" /></center>');
+                        console.log(hata);
+                    }
+
+                })
+            });
+            $(".deletebutton").click(function () {
+                var id = $(this).data("id");
+                $.post("/Category/Delete/" + id, function (data) {
+                    if (data == "OK") {
+                        alertify.alert("", function () {
+                            location = location
+                        }).setHeader("<center><span>Silme İşlemi Başarılı</span></center>").setContent('<center><img height="150" width="150"  src="https://img.paperform.co/fetch/w_400,f_auto/https://s3.amazonaws.com/pf-upload-01/u-18328/1/2019-11-09/zz13tw2/check.gif" alt="error" /></center>')
+                    }
+                    else {
+                        alertify.alert(function () {
+                            location = location;
+                        }).setHeader("<center><span>Silme İşlemi Başarısız</span></center>").setContent('<center><img height="150" width="150"  src="https://fcs3pub.s3.amazonaws.com/photo-book/images/payment/alert.gif" alt="error" /></center>')
+                    }
+                })
+            });
+            $(".updatebutton").click(function () {
+                var id = $(this).data("id");
+                $.get("/Category/Update/" + id, function (data) {
+                    $("#modalBody2").html(data);
+                });
+                $("#staticBackdrop2").modal("show");
+            });
+            $("#buttonSave2").click(function () {
+                let veriler = {
+                    CategoryId: $("#CategoryId").val(),
+                    CategoryName: $("#CategoryName").val(),
+                    Description: $("#Description").val()
+                };
+                $.ajax({
+                    url: "/Category/Update",
+                    method:"POST",
+                    data: veriler,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data == "OK") {
+                            $("#staticBackdrop2").modal("hide");
+                            alertify.alert("", function () {
+                                location = location;
+                            }).setHeader('<center><span>Güncelleme İşlemi Başarılı</span></center>').setContent('<center><img height="150" width="150"  src="https://img.paperform.co/fetch/w_400,f_auto/https://s3.amazonaws.com/pf-upload-01/u-18328/1/2019-11-09/zz13tw2/check.gif" alt="done" /></center>');
+                        }
+                       
+                    },
+                    error: function (hata) {
+                        $("#staticBackdrop2").modal("hide");
+                        alertify.alert("", function () {
+                            location = location;
+
+                        }).setHeader('<center><span>Güncelleme İşlemi Başarısız</span></center>').setContent('<center><img height="150" width="150"  src="https://fcs3pub.s3.amazonaws.com/photo-book/images/payment/alert.gif" alt="error" /></center>');
+                        console.log(hata);
+                    }
+                })
+            })
+
+
+
+        });
+
+        
+
+    </script>
+
+
+}

@@ -1,0 +1,293 @@
+﻿
+@model List<ProductDetailDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+@*<p>
+        <button class="btn btn-success" id="yeniUrun">Yeni Ürün Ekle</button>
+    </p>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+
+
+                    <td>
+                        @Html.ActionLink("Güncelle", "Update", "Products", new { id = item.ProductId }, new { @class = "btn btn-warning" }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-primary" }) |
+                        @Html.ActionLink("Delete", "Delete", "Products", new { id = item.ProductId }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure?');" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
+
+<div class="container">
+    <div class="row">
+
+
+        <div class="col-md-12 col-md-offset-1">
+
+            <div class="panel panel-default panel-table">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col col-xs-6">
+                            <h3 class="panel-title">Products List</h3>
+                        </div>
+                        <div class="col col-xs-6 text-right">
+                            <button type="button" class="btn btn-sm btn-primary btn-create" id="yeniUrun">Add New Product</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-list">
+                        <thead>
+                            <tr>
+
+                                <th class="hidden-xs">ID</th>
+                                <th>ProductName</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Category Name</th>
+                                <th style="text-align:center"><em class="fa fa-cog"></em></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model)
+                            {
+                            <tr>
+
+                                <td class="hidden-xs">@product.ProductId</td>
+                                <td>@product.ProductName</td>
+                                <td>@product.Price</td>
+                                <td>@product.Description</td>
+                                <td>@product.CategoryName</td>
+                                <td align="center">
+                                    <a class="btn btn-primary updatebutton" data-id="@product.ProductId"><em class="fa fa-pen"></em></a>
+                                    <a class="btn btn-danger deletebutton" data-id="@product.ProductId"><em class="fa fa-trash"></em></a>
+                                    <a class="btn btn-info"><em class="fa fa-info-circle"></em></a>
+                                </td>
+                            </tr>
+                            }
+
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+              
+                    <div class="row justify-content-center">
+                        <ul class="pagination ">
+                            @for (int i = 1; i <= @ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item"><a asp-action="Index" class="page-link"  asp-route-page="@i">@i</a></li>
+
+
+                            }
+                        </ul>
+                    </div>
+                   
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="staticBackdropLabel">Ürün Ekleme Ekranı</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="butonSave">Save</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop2" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="staticBackdropLabel">Ürün Ekleme Ekranı</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody2">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="buttonSave2">Save2</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#yeniUrun").click(function () {
+                $.get("/Products/Create", function (data) {
+                    $("#modalBody").html(data);
+                });
+                $("#staticBackdrop").modal("show");
+            });
+            $("#butonSave").click(function () {
+                let gidecekdata = {
+                    ProductName: $("#ProductName").val(),
+                    Price: $("#Price").val(),
+                    Description: $("#Description").val(),
+                    ImageUrl: $("#ImageUrl").val(),
+                    CategoryId: $("#CategoryId").val()
+                };
+               
+                $.ajax({
+                    url: "/Products/Create",
+                    method: "POST",
+                    data: gidecekdata,
+                    dataType: "json",
+                    success: function (data) {
+                        $("#staticBackdrop").modal("hide");
+                        alertify.alert(data + " isimli ürün başarı ile eklendi.", function () {
+                            location = location;
+
+
+                        }).setHeader('<center><span>Ekleme İşlemi Başarılı</span></center>').setContent('<center><img height="150" width="150"  src="https://img.paperform.co/fetch/w_400,f_auto/https://s3.amazonaws.com/pf-upload-01/u-18328/1/2019-11-09/zz13tw2/check.gif" alt="done" /></center>');
+                    },
+                    error: function (hata) {
+                        $("#staticBackdrop").modal("hide");
+                        alertify.alert("", function () {
+                            location = location;
+
+                        }).setHeader('<center><span>Ekleme İşlemi Başarısız</span></center>').setContent('<center><img height="150" width="150"  src="https://fcs3pub.s3.amazonaws.com/photo-book/images/payment/alert.gif" alt="error" /></center>');
+                        console.log(hata);
+                    }
+
+
+                });
+
+            });
+            $(".updatebutton").click(function () {
+                var id = $(this).data("id");
+                $.get("/Products/Update/" + id, function (data) {
+                    $("#modalBody2").html(data);
+                });
+                $("#staticBackdrop2").modal("show");
+            });
+            $("#buttonSave2").click(function () {
+                let gidecekdata = {
+                    ProductId: $("#ProductId").val(),
+                    ProductName: $("#ProductName").val(),
+                    Price: $("#Price").val(),
+                    Description: $("#Description").val(),
+                    ImageUrl: $("#ImageUrl").val(),
+                    CategoryId: $("#CategoryId").val()
+                };
+                console.log(gidecekdata);
+                $.ajax({
+                    
+                    url: "/Products/Update",
+                    method: "POST",
+                    data:gidecekdata,
+                    dataType: "json",
+                    success: function (data) {
+                        $("#staticBackdrop2").modal("hide");
+                        alertify.alert("", function () {
+                            location = location;
+
+                        }).setHeader('<center><span>Güncelleme İşlemi Başarılı</span></center>').setContent('<center><img height="150" width="150"  src="https://img.paperform.co/fetch/w_400,f_auto/https://s3.amazonaws.com/pf-upload-01/u-18328/1/2019-11-09/zz13tw2/check.gif" alt="done" /></center>');
+                    },
+                    error: function (hata) {
+                        $("#staticBackdrop2").modal("hide");
+                        alertify.alert("", function () {
+                            location = location;
+
+                        }).setHeader('<center><span>Güncelleme İşlemi Başarısız</span></center>').setContent('<center><img height="150" width="150"  src="https://fcs3pub.s3.amazonaws.com/photo-book/images/payment/alert.gif" alt="error" /></center>');
+                        console.log(hata);
+                    }
+
+
+                });
+
+            });
+            $(".deletebutton").click(function () {
+                var id = $(this).data("id");
+                $.get("/Products/Delete/" + id, function (data) {
+                    if (data == "OK") {
+                        alertify.alert("", function () {
+                            location = location;
+                        }).setHeader("<center><span>Silme İşlemi Başarılı</span></center>").setContent('<center><img height="150" width="150"  src="https://img.paperform.co/fetch/w_400,f_auto/https://s3.amazonaws.com/pf-upload-01/u-18328/1/2019-11-09/zz13tw2/check.gif" alt="error" /></center>')
+                    }
+                    else {
+                        alertify.alert(function () {
+                            location = location;
+                        }).setHeader("<center><span>Silme İşlemi Başarısız</span></center>").setContent('<center><img height="150" width="150"  src="https://fcs3pub.s3.amazonaws.com/photo-book/images/payment/alert.gif" alt="error" /></center>')
+                    }
+                });
+
+            });
+
+        
+
+        });
+
+    </script>
+}
+
+

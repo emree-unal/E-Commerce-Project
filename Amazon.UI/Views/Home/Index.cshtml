@@ -1,0 +1,65 @@
+﻿@model ProductListViewModal
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var itemCount = 0;
+}
+
+<div class="row">
+    @foreach (var item in Model.Products)
+    {
+        if (itemCount != 0 && itemCount % 4 == 0)
+        {
+        @:</div>
+        @:<div class="row">
+        }
+        <partial name="_ProductCard" model="@item" />
+        itemCount++;
+    }
+
+</div>
+<div>
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= Model.PagingInfo.TotalPages ; i++)
+        {
+            <li class="page-item"><a asp-action="Index" class="page-link" asp-route-page="@i">@i</a></li>
+
+
+        }
+    </ul>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $(".sepet").click(function () {
+                var productId = $(this).data("id");
+                var name = $(this).data("name");
+                console.log(productId);
+                $.ajax({
+                    url: "/Cart/AddToCart/",
+                    data: { productId },
+                    method: "GET",
+                    contentType: "application/Json",
+                    success: function (data) {
+                        if (data=="OK") {
+                            alertify.set('notifier', 'position', 'bottom-left');
+                            alertify.success(name + " Sepete Eklendi.");
+                        }
+                       
+                    },
+                    error: function (err) {
+                        alertify.set('notifier', 'position', 'bottom-left');
+                        alertify.error(data + " Sepete Eklenemedi.");
+                    }
+                })
+               
+            })
+
+        });
+    </script>
+ }
+
+
+
